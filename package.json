@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "typescript": "^5.6.3"
+  },
+"scripts": {
+    "compile": "tsc --project tsconfig.json",
+    "start": "node main.js && shapes.js",
+    "compile:start": "tsc --project tsconfig.json && node index.js && shapes.js"
+  }
+}

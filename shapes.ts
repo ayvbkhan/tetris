@@ -1,4 +1,6 @@
-export const shapes = {
+import { IShapes } from "./interfaces";
+
+export const shapes: IShapes = {
     S: {
         shape: [[0, 1, 1],
         [1, 1, 0]],

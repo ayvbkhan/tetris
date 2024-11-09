@@ -24,13 +24,12 @@ function drawTetrisPlayground(x: number, y: number, target: HTMLElement) {
     }
 }
 
-const tetrisPlaygroundTarget = document.querySelector('.tetris-playground') as HTMLElement | null;
-
-try {
-    drawTetrisPlayground(10, 20, tetrisPlaygroundTarget)
+const tetrisPlaygroundTarget = document.querySelector('.tetris-playground') as HTMLElement;try {
+    drawTetrisPlayground(10, 20, tetrisPlaygroundTarget);
 } catch (e) {
-    console.log(e.message)
+    console.log((e as Error).message); 
 }
+
 
 const shapeKeys = Object.keys(shapes)
 
@@ -40,21 +39,30 @@ const shapeKey = shapeKeys[shapeKeyIndex] as keyof typeof shapes;
 
 const currentShape = shapes[shapeKey]
 
-function renderShape() {
-    const rowsToColor = currentShape.shape.length
-    const cellsToColor = currentShape.shape[0].length
+function renderShape(): void {
+    if (!tetrisPlaygroundTarget) throw new Error('tetrisPlaygroundTarget is not defined');
 
+    const rowsToColor = currentShape.shape.length;
+    const cellsToColor = currentShape.shape[0].length;
+
+    const startRow = 0; // Начинаем сверху
+    const startCol = Math.floor((10 - cellsToColor) / 2); 
     for (let rowIndex = 0; rowIndex < rowsToColor; rowIndex++) {
-        const row = tetrisPlaygroundTarget?.children[rowIndex] as HTMLElement | undefined;
+        const row = tetrisPlaygroundTarget.children[startRow + rowIndex] as HTMLElement | null;
+        
+        if (!row) continue;
 
         for (let cellIndex = 0; cellIndex < cellsToColor; cellIndex++) {
-            const cell = row.children[cellIndex] as HTMLElement | undefined;
-            if (currentShape.shape[rowIndex][cellIndex]) {
-                cell.style.backgroundColor = currentShape.color
+            const cell = row.children[startCol + cellIndex] as HTMLElement | null;
+        
+            if (cell && currentShape.shape[rowIndex][cellIndex]) {
+                cell.style.backgroundColor = currentShape.color;
             }
         }
     }
 }
+
+
 
 
 function rotateShape(shape: number[][]): number[][] {
@@ -95,3 +103,9 @@ document.addEventListener('keydown', (e) => {
         renderShape()
     }
 })
+
+const playground = []
+
+for (let row = 0; row < 20; row++ ) {
+   playground[row] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+}

@@ -31,13 +31,19 @@ const shapeKeyIndex = Math.floor(Math.random() * shapeKeys.length);
 const shapeKey = shapeKeys[shapeKeyIndex];
 const currentShape = shapes[shapeKey];
 function renderShape() {
+    if (!tetrisPlaygroundTarget)
+        throw new Error('tetrisPlaygroundTarget is not defined');
     const rowsToColor = currentShape.shape.length;
     const cellsToColor = currentShape.shape[0].length;
+    const startRow = 0; // Начинаем сверху
+    const startCol = Math.floor((10 - cellsToColor) / 2);
     for (let rowIndex = 0; rowIndex < rowsToColor; rowIndex++) {
-        const row = tetrisPlaygroundTarget === null || tetrisPlaygroundTarget === void 0 ? void 0 : tetrisPlaygroundTarget.children[rowIndex];
+        const row = tetrisPlaygroundTarget.children[startRow + rowIndex];
+        if (!row)
+            continue;
         for (let cellIndex = 0; cellIndex < cellsToColor; cellIndex++) {
-            const cell = row.children[cellIndex];
-            if (currentShape.shape[rowIndex][cellIndex]) {
+            const cell = row.children[startCol + cellIndex];
+            if (cell && currentShape.shape[rowIndex][cellIndex]) {
                 cell.style.backgroundColor = currentShape.color;
             }
         }
@@ -73,3 +79,7 @@ document.addEventListener('keydown', (e) => {
         renderShape();
     }
 });
+const playground = [];
+for (let row = 0; row < 20; row++) {
+    playground[row] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+}
